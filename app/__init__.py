@@ -1,9 +1,9 @@
-from flask import Flask, jsonify,send_from_directory,request, zipfile
+from flask import Flask, jsonify,send_from_directory,request
 
-from .modules.image import utils 
+from .kenzie.image import utils 
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
+# app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
 
 
 
