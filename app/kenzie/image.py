@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 
 
 FILES_DIRECTORY = os.environ.get("FILES_DIRECTORY") 
+MAX_CONTENT_LENGTH=os.environ.get("MAX_CONTENT_LENGTH") 
 
 
 def list_all_files():
@@ -58,7 +59,8 @@ def download_zip_files(extension):
     return {"message": "arquivo zip na pasta temp"}
     
      
-    
+def content_length():
+    return MAX_CONTENT_LENGTH
     
     
     

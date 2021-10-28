@@ -1,11 +1,11 @@
 from flask import Flask, jsonify,send_from_directory,request
 
-
+app = Flask(__name__)
 
 from .kenzie import image
 
-app = Flask(__name__)
-# app.config['MAX_CONTENT_LENGTH'] = 1 * 1000 * 1000
+
+app.config['MAX_CONTENT_LENGTH'] = image.content_length() * 1024 * 1024
 # GET
 #------------------------------------------------ LIST --------------------------------------
 # objetivo : listar todos os arquivos 
@@ -60,7 +60,9 @@ def download_dir_as_zip():
 
     image.download_zip_files(extension) , 200 
 
-    return send_from_directory(directory=f"../images", path=f"{extension}", as_attachment=True), 200 
+    send_from_directory(directory="/tmp", path=f"{extension}.zip", as_attachment=True), 200 
+
+    return {"message":'download diretório .zip feito com sucesso !'}, 201
 
 
 #------------------------------------------------ UPLOAD 
@@ -69,14 +71,10 @@ def download_dir_as_zip():
 def upload_image(): 
     files_list = []
 
-    print(request.files)
-
-
     for file in request.files:
         filename= image.save_image(request.files[file]) 
         files_list.append(filename)
 
-    
 
-    return jsonify(files_list)
+    return jsonify(files_list) , 201
 
