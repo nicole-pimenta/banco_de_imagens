@@ -4,11 +4,11 @@ app = Flask(__name__)
 
 from .kenzie import image
 
+number = int(image.content_length())
+app.config['MAX_CONTENT_LENGTH'] =  number * 1024 * 1024
 
-app.config['MAX_CONTENT_LENGTH'] = image.content_length() * 1024 * 1024
-# GET
 #------------------------------------------------ LIST --------------------------------------
-# objetivo : listar todos os arquivos 
+
 @app.get('/files')
 def list_files():
     dir_list = image.list_all_files() 
@@ -20,7 +20,7 @@ def list_files():
 
     return dict(zip(dir_list,files_list)), 200
 
-# objetivo : listar todos os arquivos de um determinado tipo
+
 @app.get('/files/<string:extension>')
 def list_image_by_extension(extension:str):
     dir_list = image.list_all_files()
@@ -41,7 +41,7 @@ def list_image_by_extension(extension:str):
 
 
 #------------------------------------------------ DOWNLOAD --------------------------------------
-# objetivo : download do arquivo solicitado em file_name 
+
 @app.get('/download/<string:file_name>')
 def download_image(file_name):
     extension = image.get_extension(file_name)
@@ -70,11 +70,15 @@ def download_dir_as_zip():
 @app.post('/upload')
 def upload_image(): 
     files_list = []
-
+    
     for file in request.files:
         filename= image.save_image(request.files[file]) 
         files_list.append(filename)
+    
+    if request.content_length < 100000:
+        return jsonify(files_list) , 201
+    else:
+        return {"msg": "tamanho nao suportado"}
 
-
-    return jsonify(files_list) , 201
+    
 

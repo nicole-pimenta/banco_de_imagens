@@ -2,6 +2,8 @@ import os
 
 import dotenv
 
+from app.kenzie import ALLOWED_EXTENSIONS
+
 dotenv.load_dotenv() 
 
 from flask.helpers import safe_join
@@ -12,6 +14,8 @@ from werkzeug.utils import secure_filename
 
 FILES_DIRECTORY = os.environ.get("FILES_DIRECTORY") 
 MAX_CONTENT_LENGTH=os.environ.get("MAX_CONTENT_LENGTH") 
+ALLOWED_EXTENSIONS = os.environ.get("ALLOWED_EXTENSIONS")
+
 
 
 def list_all_files():
@@ -52,6 +56,10 @@ def save_image(file: FileStorage):
     
     return filename
 
+def verify_extension(file:FileStorage):
+    file_extension = file.filename.split(".")[-1]
+    return file_extension
+
 
 def download_zip_files(extension):   
     os.system(f'zip -r /tmp/{extension}.zip images/{extension}')
@@ -63,4 +71,6 @@ def content_length():
     return MAX_CONTENT_LENGTH
     
     
-    
+def allowed_extensions():
+    extensoes_permitidas = ALLOWED_EXTENSIONS.split('.')
+    return list(extensoes_permitidas)
