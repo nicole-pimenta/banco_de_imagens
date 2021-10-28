@@ -30,12 +30,6 @@ def get_extension(filename:str):
     return extension
 
 
-def list_all_images_files():
-    files_list = os.listdir(FILES_DIRECTORY)
-    return files_list
-
-
-
 def check_if_empty_repo_exist():
     all_directories = os.listdir(FILES_DIRECTORY) 
     verify = [ ]
@@ -46,29 +40,25 @@ def check_if_empty_repo_exist():
     return all(verify)   
 
 
-
-
-
-
-
-
-def png_path(filename:str):
-    path = safe_join(f'{FILES_DIRECTORY}/png',filename)
-    return path 
-
 def save_image(file: FileStorage):
     file_extension = file.filename.split(".")[-1]
     filename = str(datetime.now(timezone.utc))[:26] 
     filename = secure_filename(filename) 
     filename = f'{filename}.{file_extension}'
-    path = safe_join(FILES_DIRECTORY, filename)
+    path = safe_join(FILES_DIRECTORY, f'{file_extension}/{filename}')
     
     file.save(path)
+    
     return filename
 
 
-def dowload_zip_dir(path):
-    comando = f'{path} touch nicole.txt'
-    os.system(comando)
+def download_zip_files(extension):   
+    os.system(f'zip -r /tmp/{extension}.zip images/{extension}')
+    #os.system(f'zip -r /tmp/{extension}.zip images/{extension}')
+    return {"message": "arquivo zip na pasta temp"}
+    
+     
+    
+    
     
     
